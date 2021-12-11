@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import PostForm, EditForm
+from .forms import PostForm, EditForm, CommentForm
 from django.urls import reverse_lazy, reverse
-from .models import Post, Category
+from .models import Post, Category, Comment
 from django.http import HttpResponseRedirect
 
 # Create your views here.
@@ -48,6 +48,20 @@ class AddPostView(CreateView):
     template_name = 'add_post.html'
     # fields = '__all__'
     # fields=('title','body')
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'add_comment.html'
+    # fields = '__all__'
+    # fields=('title','body')
+
+
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+    success_url = reverse_lazy('home')
+
 
 
 class AddCategoryView(CreateView):

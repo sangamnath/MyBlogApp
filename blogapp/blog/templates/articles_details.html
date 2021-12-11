@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 {{post.title}}
 {% endblock %}
@@ -10,7 +10,7 @@
     {% if user.is_authenticated %}
     {% if user.id == post.author.id %}
     <small> - <a href="{% url 'update-post' post.pk %}">Edit</a></small>
-    - <a href="{% url 'delete-post' post.pk %}">(Delete)</a>
+    - <small><a href="{% url 'delete-post' post.pk %}">Delete</a></small>
     {% endif %}
     {% endif %}
 </small>
@@ -50,20 +50,28 @@
 
  {{ total_likes }}
 
+
+
+
  <br/><br/>
-
-
  <div class="card mb-3" >
     <div class="row g-0">
       <div class="col-md-2">
         {% if post.author.profile.profile_pic %}
         <img src="{{post.author.profile.profile_pic.url}}" class="img-fluid rounded-start" alt="...">
+        {% else %}
+
+        <img src="{% static 'theblog/images/default-profile.png' %}" class="img-fluid rounded-start" alt="...">
+
         {% endif %}
       </div>
       <div class="col-md-10">
         <div class="card-body">
-          <h5 class="card-title">{{post.author.first_name}} {{post.author.last_name}}</h5>
+          <!-- <a href ="{% url 'show_profile' post.author.profile.id %}"></a> -->
+          <h5 class="card-title"> {{post.author.first_name}} {{post.author.last_name}}</h5>
           <p class="card-text"><small class="text-muted">
+
+              
               <a href="{{post.author.profile.website_url}}">Website</a>
               <a href="{{post.author.profile.facebook_url}}">FaceBook</a>
               <a href="{{post.author.profile.linkedin_url}}">LinkedIn</a>
@@ -75,8 +83,41 @@
     </div>
   </div>
 
- {% if post.author.profile.profile_pic %}
+ <!-- {% if post.author.profile.profile_pic %}
  <img src="{{ post.author.profile.profile_pic.url }}" width="200" height="200"
  class="rounded-circle">
- {% endif %}
+ {% endif %} -->
+
+ <br/><br/>
+ <hr>
+ <h2> Comments</h2>
+<br>
+ {% if not post.comments.all %}
+
+    No Comments Yet!
+
+{% else %}
+
+<a href="{% url 'add_comment' post.pk %}">
+Add Comment
+</a>
+<br/><br/>
+    {% for comment in post.comments.all %}
+
+    <strong>
+      {{comment.name}} - {{comment.date_added}}
+    </strong>
+    <br/>
+    {{comment.body}}
+    <br>
+    <br>
+    
+    {% endfor %}
+{% endif %}
+
+<a href="{% url 'add_comment' post.pk %}">
+  Add Comment
+
+</a>
+<br/><br/>
 {% endblock %}

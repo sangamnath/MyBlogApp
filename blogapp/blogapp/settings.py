@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'blog',
     'members',
     'ckeditor',
+    'chat',
+    'channels'
     
 ]
 
@@ -73,6 +75,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'blogapp.wsgi.application'
+ASGI_APPLICATION = 'blogapp.asgi.application'
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             'hosts': [('0.0.0.0', 6379)],
+#         }
+#     }
+# }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        
+    }
+}
 
 
 # Database
@@ -124,6 +143,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = [
+
+    os.path.join(BASE_DIR,'static')
+]
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
